@@ -1,5 +1,5 @@
+library my_globals;
 import 'package:flutter/material.dart';
-
 class SessionManager {
   // Private static instance
   static final SessionManager _instance = SessionManager._internal();
@@ -27,15 +27,18 @@ class SessionManager {
   }
 }
 
-// Global variables
-String globalPassword = '';
-String globalUsername = '';
-String globalname = '';
-String globalFaculty = '';
-String globalBranch = '';
-String globalSemester = '';
-String globalDivision = '';
-String globalImage = '';
 
 // Singleton instance (no need to re-initialize)
 final SessionManager sessionManager = SessionManager();
+
+
+String? globalEnrollmentNumber;
+String? globalStudentList;
+String? globalUsername;
+String? globalPassword;
+String? globalBranch;
+String? globalTimetable;
+String? globalProject;
+String? globalExamtyp;
+String? globalStudentid;
+

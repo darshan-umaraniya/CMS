@@ -53,7 +53,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDxR7k8rNpRQOgj8sNqiH-kjzfZuxcgX5U',
-    appId: '1:568955745237:android:b5a98fc5e7841f9b6f435c',
+    appId: '1:568955745237:android:960963df1adf155e6f435c',
     messagingSenderId: '568955745237',
     projectId: 'curious-striker-411003',
     databaseURL: 'https://curious-striker-411003-default-rtdb.firebaseio.com',
@@ -62,32 +62,33 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBsNJFVcyXEtl2QyplWXXHISeQX_cD4-uo',
-    appId: '1:568955745237:ios:41da78433f1d94bd6f435c',
+    appId: '1:568955745237:ios:025c03cb586c73306f435c',
     messagingSenderId: '568955745237',
     projectId: 'curious-striker-411003',
     databaseURL: 'https://curious-striker-411003-default-rtdb.firebaseio.com',
     storageBucket: 'curious-striker-411003.firebasestorage.app',
-    iosBundleId: 'com.example.test1',
+    iosBundleId: 'com.example.faculty2',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBsNJFVcyXEtl2QyplWXXHISeQX_cD4-uo',
-    appId: '1:568955745237:ios:41da78433f1d94bd6f435c',
+    appId: '1:568955745237:ios:025c03cb586c73306f435c',
     messagingSenderId: '568955745237',
     projectId: 'curious-striker-411003',
     databaseURL: 'https://curious-striker-411003-default-rtdb.firebaseio.com',
     storageBucket: 'curious-striker-411003.firebasestorage.app',
-    iosBundleId: 'com.example.test1',
+    iosBundleId: 'com.example.faculty2',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
     apiKey: 'AIzaSyAff5w0BL5XOYa-uypuEKA_OE_5zq_TgHo',
-    appId: '1:568955745237:web:f9b6d5d33cbc526c6f435c',
+    appId: '1:568955745237:web:1a1251e054461ff46f435c',
     messagingSenderId: '568955745237',
     projectId: 'curious-striker-411003',
     authDomain: 'curious-striker-411003.firebaseapp.com',
     databaseURL: 'https://curious-striker-411003-default-rtdb.firebaseio.com',
     storageBucket: 'curious-striker-411003.firebasestorage.app',
-    measurementId: 'G-QTSTDXBR65',
+    measurementId: 'G-0FFLNY8KVK',
   );
 }
+//

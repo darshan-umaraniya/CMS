@@ -27,25 +27,6 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:568955745237:android:960963df1adf155e6f435c",
-        "android_client_info": {
-          "package_name": "com.example.faculty2"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDxR7k8rNpRQOgj8sNqiH-kjzfZuxcgX5U"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:568955745237:android:329488788913b7d96f435c",
         "android_client_info": {
           "package_name": "com.example.finance_department"

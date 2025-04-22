@@ -1,32 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:faculty2/faculty%20Section/adminhomepage.dart';
+import 'package:faculty2/faculty%20Section/globals.dart';
 import 'package:flutter/material.dart';
-import 'package:test1/Student%20Section/Global.dart';
-import 'package:test1/Student%20Section/Homepage.dart';
-import 'package:test1/Student%20Section/session_manager.dart'; // Import SessionManager
-import 'Global.dart';
+
 class Login extends StatefulWidget {
-  const Login({super.key});
+  const Login({Key? key}) : super(key: key);
+
   @override
   State<Login> createState() => _LoginState();
 }
-class _LoginState extends State<Login> {
+
+class _LoginState extends State<Login>  {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final CollectionReference facultyCollection =
-  FirebaseFirestore.instance.collection('enrollmentData');
+  FirebaseFirestore.instance.collection('Faculty_id_password');
   bool _isLoading = false;
   bool _isVisible = false;
-  Widget targetPage = Homepage();
+  // Define targetPage as a Widget variable that can be dynamically updated
+  Widget targetPage = adminhome(); // Default to Homepage
   @override
   void initState() {
     super.initState();
+    // Trigger animation on first load
     Future.delayed(Duration(microseconds: 100), () {
       setState(() {
         _isVisible = true;
       });
     });
-  }
-  bool _verifyPassword(String inputPassword, String storedHashedPassword) {
-    return inputPassword == storedHashedPassword;
   }
   void _showErrorDialog(String message) {
     showDialog(
@@ -44,63 +46,64 @@ class _LoginState extends State<Login> {
     );
   }
   Future<void> _LoginUser() async {
-      if (!_formKey.currentState!.validate()) {
-        return;
-      }
-
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        // Get user credentials from session manager
-        final String username = sessionManager.username.trim();
-        final String password = sessionManager.password.trim();
-
-        if (username.isEmpty || password.isEmpty) {
-          _showErrorDialog('Username and password cannot be empty');
-          return;
-        }
-
-        QuerySnapshot querySnapshot = await facultyCollection
-            .where('enrollmentNumber', isEqualTo: username)
-            .get();
-
-        if (querySnapshot.docs.isEmpty) {
-          _showErrorDialog('Invalid username or password');
-          return;
-        }
-
-        final userDoc = querySnapshot.docs.first;
-        final String storedHashedPassword = userDoc['password'];
-
-        if (!_verifyPassword(password, storedHashedPassword)) {
-          _showErrorDialog('Invalid username or password');
-          return;
-        }
-          globalPassword=password;
-          globalUsername=username;
-        // Authentication successful, navigate to the homepage
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Homepage()),
-        );
-
-      } catch (e) {
-        _showErrorDialog('An error occurred. Please try again later.');
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+    if (!_formKey.currentState!.validate()) {
+      return;
     }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Get user input
+      final username = _usernameController.text.trim();
+      final password = _passwordController.text.trim();
+
+      // Fetch user data from Firestore
+      QuerySnapshot querySnapshot = await facultyCollection
+          .where('username', isEqualTo: username)
+          .limit(1) // Optimize query
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final userDoc = querySnapshot.docs.first;
+        final storedPassword = userDoc['password']; // Fetch stored password
+
+        // Validate password
+        if (password == storedPassword) {  // Replace with `_verifyPassword()` if using hashed passwords
+          print("Login successful!");
+          globalUsername=username;
+          // Navigate to admin home only if login is valid
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => adminhome()),
+          );
+          return;
+        }
+      }
+
+      // If login fails, show error
+      _showErrorDialog('Invalid username or password');
+    } catch (e) {
+      print('Error during Login: $e');
+      _showErrorDialog('An error occurred. Please try again later.');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+  bool _verifyPassword(String inputPassword, String storedHashedPassword) {
+    return inputPassword == storedHashedPassword; // Update this if using bcrypt
+  }
+  // Helper function to create the page route dynamically
   PageRouteBuilder _createPageRoute(Widget page) {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => page,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
+        var begin = Offset(1.0, 0.0); // Start position (off-screen)
+        var end = Offset.zero; // End position (center of screen)
+        var curve = Curves.ease; // Define transition curve
         var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
         var offsetAnimation = animation.drive(tween);
 
@@ -108,6 +111,7 @@ class _LoginState extends State<Login> {
       },
     );
   }
+
   bool _isObscure = true;
   @override
   Widget build(BuildContext context) {
@@ -120,7 +124,7 @@ class _LoginState extends State<Login> {
         backgroundColor: Colors.orangeAccent,
         title: Center(
           child: Text(
-            "Log In",
+            "Log In Faculty",
             style: TextStyle(
               fontFamily: 'Robot',
               color: Colors.white,
@@ -132,13 +136,12 @@ class _LoginState extends State<Login> {
       ),
       body: Container(
         width: screenWidth,
-        height: screenHeight,
         child: Expanded(
           child: ListView(
             children: [
               AnimatedOpacity(
-                duration: Duration(seconds: 5),
-                opacity: _isVisible ? 1.0 : 0.0,
+                duration: Duration(seconds: 5), // 1-second fade-in effect
+                opacity: _isVisible ? 1.0 : 0.0, // Toggle visibility
                 child: Column(
                   children: [
                     SizedBox(height: 35),
@@ -167,7 +170,7 @@ class _LoginState extends State<Login> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             TextFormField(
-                              controller: sessionManager.usernameController, // Use global controller
+                              controller: _usernameController,
                               decoration: InputDecoration(
                                 labelText: 'Username',
                                 labelStyle: TextStyle(fontWeight: FontWeight.bold),
@@ -185,10 +188,12 @@ class _LoginState extends State<Login> {
                             ),
                             SizedBox(height: 16),
                             TextFormField(
-                              controller: sessionManager.passwordController, // Use global controller
+                              controller: _passwordController,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   borderSide: BorderSide(color: Colors.grey, width: 2),
@@ -200,12 +205,12 @@ class _LoginState extends State<Login> {
                                   ),
                                   onPressed: () {
                                     setState(() {
-                                      _isObscure = !_isObscure;
+                                      _isObscure = !_isObscure; // Toggle password visibility
                                     });
                                   },
                                 ),
                               ),
-                              obscureText: _isObscure,
+                              obscureText: _isObscure, // Hide/show password
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Please enter a password';
@@ -229,15 +234,14 @@ class _LoginState extends State<Login> {
                             padding: const EdgeInsets.all(8.0),
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                  elevation: 5, backgroundColor: Colors.white),
-                              onPressed: _LoginUser,
-                              child: Text(
-                                'Login',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                                  elevation: 5,
+                                  backgroundColor: Colors.white
                               ),
+                              onPressed: _LoginUser, // Login button redirects to Homepage
+                              child: Text('Login',style: TextStyle(fontWeight: FontWeight.bold),),
                             ),
                           ),
-                        ],
+                                            ],
                       ),
                   ],
                 ),
